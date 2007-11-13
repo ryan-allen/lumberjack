@@ -25,7 +25,12 @@ class Lumberjack
   def method_missing(*args, &block)
     if !current_scope.is_a?(Array)
       attr = args.shift
-      current_scope.send("#{attr}=", *args)
+      if block # we're making an accessor into an array of Instances
+        current_scope.send("#{attr}=", [])
+        append_scope_with current_scope.send("#{attr}")
+      else # it's just a plain old assignment
+        current_scope.send("#{attr}=", *args)
+      end
     else # scope is an Array, so create an Instance
       klass = args.shift
       instance = eval(klass.to_s.classify).new(*args)
