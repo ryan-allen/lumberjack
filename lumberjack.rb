@@ -14,28 +14,31 @@ class Lumberjack
   end
   
   def __process(block)
-    prepare_tree
+    prepare_scope
     instance_eval(&block) if block
-    tree.first
+    tree
   rescue
-    puts tree.inspect
+    puts @scope.inspect
     raise $!
   end
   
   def method_missing(*args, &block)
-    if !current_scope.is_a?(Array)
-      attr = args.shift
-      if block # we're making an accessor into an array of Instances
-        current_scope.send("#{attr}=", [])
-        append_scope_with current_scope.send("#{attr}")
-      else # it's just a plain old assignment
-        current_scope.send("#{attr}=", *args)
+    if !current_scope.is_a?(Array) # we're working inside an Instace
+      accessor = args.shift # grab the accessor name
+      if block and args.empty? # we're making an accessor into an array of Instances
+        array = []
+        append_scope_with array
+        instance_eval(&block)
+        jump_out_of_scope
+        current_scope.send("#{accessor}=", array)        
+      else # it's just a plain old assignment to the accessor
+        current_scope.send("#{accessor}=", *args)
       end
     else # scope is an Array, so create an Instance
       klass = args.shift
       instance = eval(klass.to_s.classify).new(*args)
-      current_scope << instance
-      if block
+      current_scope << instance # add this instance to the scoped Array
+      if block # we got a block, change scope to set accessors
         append_scope_with instance
         instance_eval(&block)
         jump_out_of_scope
@@ -45,24 +48,28 @@ class Lumberjack
   
 private
 
-  def prepare_tree
-    @tree = [[]]
+  def prepare_scope
+    @scope = [[]]
   end
   
   def append_scope_with(new_scope)
-    tree.push new_scope
+    scope.push new_scope
   end
   
   def jump_out_of_scope
-    tree.pop
+    scope.pop
   end
   
   def current_scope
-    tree.last
+    scope.last
   end
   
   def tree
-    @tree
+    scope.first
+  end
+  
+  def scope
+    @scope
   end
   
 end

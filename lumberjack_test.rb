@@ -11,7 +11,7 @@ end
 class Person
   attr_accessor :given_name, :age
   def initialize(name = nil, age = nil)
-    @name, @age = name, age
+    @given_name, @age = name, age
   end
 end
 
@@ -109,6 +109,17 @@ class LumberjackTest < Test::Unit::TestCase
         end
       end
     end
+    assert 1, tree.length
+    assert_kind_of Family, tree[0]
+    assert_equal 'Allen', tree[0].name
+    assert_equal [:english, :irish], tree[0].heritage
+    assert_equal 3, tree[0].members.length
+    assert_equal 'Tim', tree[0].members[0].given_name
+    assert_equal 58, tree[0].members[0].age
+    assert_equal 'Jan', tree[0].members[1].given_name
+    assert_equal 54, tree[0].members[1].age
+    assert_equal 'Ryan', tree[0].members[2].given_name
+    assert_equal 24, tree[0].members[2].age
   end
   
   # def test_can_create_list_of_primitives # not sure this is valid useage
