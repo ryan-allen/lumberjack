@@ -96,22 +96,22 @@ class LumberjackTest < Test::Unit::TestCase
     assert_equal [:english, :irish], tree[0].heritage
   end
   
-  def test_create_list_in_scoped_instance_if_block_with_no_args
-    tree = Lumberjack.construct do
-      family 'Allen' do
-        heritage [:english, :irish]
-        members do # working from here
-          person 'Tim', 58
-          person 'Jan', 54
-          person 'Ryan' do
-            age 24
-          end
-        end
-      end
-    end
-  end
+  # def test_create_list_in_scoped_instance_if_block_with_no_args
+  #   tree = Lumberjack.construct do
+  #     family 'Allen' do
+  #       heritage [:english, :irish]
+  #       members do # working from here
+  #         person 'Tim', 58
+  #         person 'Jan', 54
+  #         person 'Ryan' do
+  #           age 24
+  #         end
+  #       end
+  #     end
+  #   end
+  # end
   
-  # def test_can_create_list_of_primitives
+  # def test_can_create_list_of_primitives # not sure this is valid useage
   #   tree = Lumberjack.construct do
   #     array [:one, :two, :three]
   #     array [:four, :five, :six]
