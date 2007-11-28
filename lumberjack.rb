@@ -23,7 +23,7 @@ class Lumberjack
   end
   
   def method_missing(*args, &block)
-    if !current_scope.is_a?(Array) # we're working inside an Instace
+    if !current_scope.is_a?(Array) # we're working inside an Instance
       accessor = args.shift # grab the accessor name
       if block and args.empty? # we're making an accessor into an array of Instances
         array = []
