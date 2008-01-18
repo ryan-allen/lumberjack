@@ -32,7 +32,11 @@ class Lumberjack
         jump_out_of_scope
         current_scope.send("#{accessor}=", array)        
       else # it's just a plain old assignment to the accessor
-        current_scope.send("#{accessor}=", *args)
+        if args.length == 1
+          current_scope.send("#{accessor}=", *args)
+        else # it looks like someone is trying to pass an array... so
+          current_scope.send("#{accessor}=", args)
+        end
       end
     else # scope is an Array, so create an Instance
       klass = args.shift

@@ -122,6 +122,15 @@ class LumberjackTest < Test::Unit::TestCase
     assert_equal 24, tree[0].members[2].age
   end
   
+  def test_can_take_generate_arrays_with_comma_semantics_and_tell_the_difference
+    tree = Lumberjack.construct do
+      family 'Allen' do
+        heritage :english, :irish
+      end
+    end
+    assert_equal [:english, :irish], tree[0].heritage
+  end
+  
   # def test_can_create_list_of_primitives # not sure this is valid useage
   #   tree = Lumberjack.construct do
   #     array [:one, :two, :three]
