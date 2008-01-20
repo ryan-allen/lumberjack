@@ -35,6 +35,10 @@ class Lumberjack
         if args.length == 1
           current_scope.send("#{accessor}=", *args)
         else # it looks like someone is trying to pass an array... so
+          #
+          # THIS BIT IS FUCKED, take this crap out, it makes the API
+          # way too confusing and inconsistent
+          #
           current_scope.send("#{accessor}=", args)
         end
       end
