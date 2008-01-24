@@ -131,6 +131,10 @@ class LumberjackTest < Test::Unit::TestCase
     assert_equal [:english, :irish], tree[0].heritage
   end
   
+  def test_will_push_element_onto_array_if_element_is_already_initialized_as_array
+    raise
+  end
+  
   # def test_can_create_list_of_primitives # not sure this is valid useage
   #   tree = Lumberjack.construct do
   #     array [:one, :two, :three]
