@@ -15,6 +15,27 @@ class Person
   end
 end
 
+class Showroom < Array
+end
+
+class Vehicle
+  attr_accessor :name, :wheels
+  def initialize(args)
+    @name = args[:name]
+    @wheels = SetOfWheels.new
+  end
+end
+
+class SetOfWheels < Array
+end
+
+class Wheel
+  attr_accessor :wear
+  def initialize(args)
+    @wear = args[:wear]
+  end
+end
+
 # tree = Lumberjack.construct do # create a list
 #   family do # new Family
 #     name 'Allen' # name = on instance of Family, scope :instance
@@ -131,8 +152,25 @@ class LumberjackTest < Test::Unit::TestCase
     assert_equal [:english, :irish], tree[0].heritage
   end
   
-  def test_will_push_element_onto_array_if_element_is_already_initialized_as_array
-    raise
+  def test_will_push_element_onto_object_if_list_accessor_is_already_initialized
+    vehicles = Lumberjack.construct do
+      vehicle :name => 'unicycle' do
+        wheels do
+          wheel :wear => 'bald'
+        end
+      end
+    end
+    assert_kind_of SetOfWheels, vehicles[0].wheels
+  end
+  
+  def test_can_set_initial_context_to_something_else_besdies_an_array
+    showroom = Lumberjack.construct Showroom.new do
+      vehicle :name => 'a FERRARRI!!!1'
+      vehicle :name => 'a MASERATI!!!1'
+      vehicle :name => 'a PORCHE OMG!!!'
+    end
+    assert_kind_of Showroom, showroom
+    assert_equal 3, showroom.length
   end
   
   # def test_can_create_list_of_primitives # not sure this is valid useage
