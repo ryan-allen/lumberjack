@@ -35,7 +35,15 @@ class Lumberjack
     #
     if !current_scope.respond_to?(:<<) # we're working inside an Instance
       accessor = args.shift # grab the accessor name
-      if block and args.empty? # we're making an accessor into an array of Instances
+      if accessor.to_s[-1].chr == '!' # hacky hack instance something
+        instance = eval(accessor.to_s[0...-1].classify).new(*args)
+        current_scope.send("#{accessor.to_s[0...-1]}=", instance)
+        if block # we got a block, change scope to set accessors
+          append_scope_with instance
+          instance_eval(&block)
+          jump_out_of_scope
+        end
+      elsif block and args.empty? # we're making an accessor into an array of Instances
         if current_scope.send("#{accessor}").nil?
           current_scope.send("#{accessor}=", [])
         end

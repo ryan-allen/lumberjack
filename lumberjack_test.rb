@@ -19,7 +19,7 @@ class Showroom < Array
 end
 
 class Vehicle
-  attr_accessor :name, :wheels
+  attr_accessor :name, :wheels, :person
   def initialize(args)
     @name = args[:name]
     @wheels = SetOfWheels.new
@@ -171,6 +171,24 @@ class LumberjackTest < Test::Unit::TestCase
     end
     assert_kind_of Showroom, showroom
     assert_equal 3, showroom.length
+  end
+  
+  # biggest hack ever, use a ! to isntanciate a class to an accessor, must be
+  # inferable by the accessor name, such a large hack, but we need it for
+  # production, and i'm sure other people will need it, so lets leave this 
+  # gaping flaw of lumberjack for the time being till we can think of something
+  # more nice and appropriate :/ :D
+  def test_can_create_instance_of_class_via_bang_method 
+    cars = Lumberjack.construct do
+      vehicle :name => 'Prius (are owned by rich hippies)' do
+        person! 'Ryan' do
+          age 25
+        end
+      end
+    end
+    assert_kind_of Person, cars[0].person
+    assert_equal 'Ryan', cars[0].person.given_name
+    assert_equal 25, cars[0].person.age
   end
   
   # def test_can_create_list_of_primitives # not sure this is valid useage
