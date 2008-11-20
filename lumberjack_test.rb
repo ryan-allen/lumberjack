@@ -19,8 +19,12 @@ class Showroom < Array
 end
 
 class Vehicle
+  class Heavy < Vehicle
+    class ReallyHeavy < Heavy
+    end
+  end
   attr_accessor :name, :wheels, :person
-  def initialize(args)
+  def initialize(args = {:name => 'A Car, ya mum'})
     @name = args[:name]
     @wheels = SetOfWheels.new
   end
@@ -41,28 +45,29 @@ end
 #     name 'Allen' # name = on instance of Family, scope :instance
 #     members do # assign a list to members =, scope :list
 #       person 'Tim', 58 # << Person.new('Tim', 58)
-#       person 'Jan', 54
-#       person 'Ryan', 24
+#       person 'Jan', 52
+#       person 'Ryan', 25
 #       person 'Bridget' do
-#         age 21
+#         age 22
 #       end
 #       person do
 #         name 'Becca'
-#         age 19
+#         age 20
 #       end
 #     end
 #   end
 # end
 
 class LumberjackTest < Test::Unit::TestCase
-  
+
   def test_construct_returns_an_empty_list
     assert_equal [], Lumberjack.construct
   end
   
   def test_can_create_a_single_class
     tree = Lumberjack.construct do
-      family
+      family {} # api change w/ scoping requires a block to be passed, otherwise can't tell if you're
+                # trying to resolve a nested scope
     end
     assert 1, tree.length
     assert_kind_of Family, tree.first
@@ -181,7 +186,7 @@ class LumberjackTest < Test::Unit::TestCase
   def test_can_create_instance_of_class_via_bang_method 
     cars = Lumberjack.construct do
       vehicle :name => 'Prius (are owned by rich hippies)' do
-        person! 'Ryan' do
+        person! 'Ryan' do # i so put my foot in here, i'm not a rich hippy!
           age 25
         end
       end
@@ -198,6 +203,17 @@ class LumberjackTest < Test::Unit::TestCase
   #   end
   #   assert_equal [[:one, :two, :three], [:four, :five, :six]]
   # end
-  
+
+  def test_we_got_backslashes_that_resolve_scope_or_something
+    cars = Lumberjack.construct do
+      vehicle :name => 'Normal Car'
+      # unfortunatley we need to use parantehseshtheses here :(
+      vehicle/heavy(:name => 'Heavy Car')
+      vehicle/heavy/really_heavy(:name => 'Really Heavy Heavy Car')
+    end
+    assert_kind_of Vehicle, cars[0]
+    assert_kind_of Vehicle::Heavy, cars[1]
+    assert_kind_of Vehicle::Heavy::ReallyHeavy, cars[2]
+  end
   
 end
