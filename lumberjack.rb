@@ -1,5 +1,3 @@
-%w(rubygems active_support).each { |d| require d }
-
 class Lumberjack
   
   def self.construct(initial_scope = [], &block)
@@ -47,7 +45,7 @@ class Lumberjack
       if !current_scope.respond_to?(:<<) # we're working inside an Instance
         accessor = args.shift # grab the accessor name
         if accessor.to_s[-1].chr == '!' # hacky hack instance something
-          instance = eval(accessor.to_s[0...-1].classify).new(*args)
+          instance = eval(classify(accessor.to_s[0...-1])).new(*args)
           current_scope.send("#{accessor.to_s[0...-1]}=", instance)
           if block # we got a block, change scope to set accessors
             append_scope_with instance
@@ -75,12 +73,14 @@ class Lumberjack
         end
       else # scope is an Array, so create an Instance
         klass = args.shift
+        # :w
+
         if @bits and @bits.any?
-          module_scope = @bits.collect { |bit| bit.to_s.classify }.join('::')
-          instance = eval("#{module_scope}::#{klass.to_s.classify}").new(*args)
+          module_scope = @bits.collect { |bit| classify bit.to_s }.join('::')
+          instance = eval("#{module_scope}::#{classify klass.to_s}").new(*args)
           @bits = nil
         else
-          instance = eval(klass.to_s.classify).new(*args)
+          instance = eval(classify(klass.to_s)).new(*args)
         end
         current_scope << instance # add this instance to the scoped Array
         if block # we got a block, change scope to set accessors
@@ -116,6 +116,11 @@ private
   
   def scope
     @scope
+  end
+
+  def classify(str)
+    camels = str.split('_')
+    camels.collect { |c| c.capitalize }.join
   end
   
 end
