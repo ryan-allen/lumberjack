@@ -196,13 +196,13 @@ class LumberjackTest < Test::Unit::TestCase
     assert_equal 25, cars[0].person.age
   end
   
-  # def test_can_create_list_of_primitives # not sure this is valid useage
-  #   tree = Lumberjack.construct do
-  #     array [:one, :two, :three]
-  #     array [:four, :five, :six]
-  #   end
-  #   assert_equal [[:one, :two, :three], [:four, :five, :six]]
-  # end
+  def test_can_create_list_of_primitives # not sure this is valid useage (of course it is you big dummy ryan from the past!)
+    tree = Lumberjack.construct do
+      array [:one, :two, :three]
+      array [:four, :five, :six]
+    end
+    assert_equal [[:one, :two, :three], [:four, :five, :six]], tree
+  end
 
   def test_we_got_backslashes_that_resolve_scope_or_something
     cars = Lumberjack.construct do
