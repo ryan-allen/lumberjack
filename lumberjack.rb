@@ -73,8 +73,6 @@ class Lumberjack
         end
       else # scope is an Array, so create an Instance
         klass = args.shift
-        # :w
-
         if @bits and @bits.any?
           module_scope = @bits.collect { |bit| classify bit.to_s }.join('::')
           instance = eval("#{module_scope}::#{classify klass.to_s}").new(*args)
@@ -82,12 +80,12 @@ class Lumberjack
         else
           instance = eval(classify(klass.to_s)).new(*args)
         end
-        current_scope << instance # add this instance to the scoped Array
         if block # we got a block, change scope to set accessors
           append_scope_with instance
           instance_eval(&block)
           jump_out_of_scope
         end
+        current_scope << instance # add this instance to the scoped Array (after attrs have been set)
       end
     end
   end
