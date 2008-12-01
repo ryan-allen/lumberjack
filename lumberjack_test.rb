@@ -31,25 +31,13 @@ class Vehicle
 end
 
 class SetOfWheels < Array
-  def <<(wheel)
-    super(wheel) unless wheel.worn_out? # test that we completely construct an object prior to pushing it
-  end
 end
 
 class Wheel
   attr_accessor :wear
-  def initialize(args = {})
+  def initialize(args)
     @wear = args[:wear]
   end
-
-  def worn_out?
-    if @wear
-      false
-    else
-      raise "i was expecting @wear to be set!!!" # for testing delayed push
-    end
-  end
-
 end
 
 # tree = Lumberjack.construct do # create a list
@@ -226,15 +214,6 @@ class LumberjackTest < Test::Unit::TestCase
     assert_kind_of Vehicle, cars[0]
     assert_kind_of Vehicle::Heavy, cars[1]
     assert_kind_of Vehicle::Heavy::ReallyHeavy, cars[2]
-  end
-
-  def test_we_fully_initialize_an_object_prior_to_pushing_it_onto_something
-    Lumberjack.construct SetOfWheels.new do
-      wheel do
-        wear :none # delayed attribute setting, if it's pushed early it'll raise an exception
-                   # as per the array implentation of <<
-      end
-    end
   end
   
 end
