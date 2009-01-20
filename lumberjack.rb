@@ -28,6 +28,12 @@ class Lumberjack
     self
   end
   
+  def load_tree_file(filename)
+    File.open filename, 'r' do |f|
+      eval f.read, binding, __FILE__, __LINE__
+    end
+  end
+  
   def method_missing(*args, &block)
     # if we only have one arg, and no block, then we're trying to build a
     # module scope, i.e. a/b/c/d would resolve to A::B::C::D, so let's start

@@ -216,4 +216,28 @@ class LumberjackTest < Test::Unit::TestCase
     assert_kind_of Vehicle::Heavy::ReallyHeavy, cars[2]
   end
   
+  def test_we_can_load_in_other_files
+    family = Lumberjack.construct do
+      family 'Barton' do
+        heritage [:dutch, :mongrel_aussie]
+        members do
+          load_tree_file 'examples/people.rb'
+        end
+      end
+    end
+    
+    assert 1, family.length
+    assert_kind_of Family, family.first
+    assert_equal 'Barton', family.first.name
+    assert_equal [:dutch, :mongrel_aussie], family.first.heritage
+
+    assert_equal 5, family.first.members.size
+
+    assert_equal 'John S', family.first.members.first.given_name
+    assert_equal 50, family.first.members.first.age
+
+    assert_equal 'Ethan', family.first.members.last.given_name
+    assert_equal 10, family.first.members.last.age
+
+  end
 end
