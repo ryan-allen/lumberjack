@@ -240,4 +240,52 @@ class LumberjackTest < Test::Unit::TestCase
     assert_equal 10, family.first.members.last.age
 
   end
+  
+  def test_we_can_share_branches_that_are_defined
+    families = Lumberjack.construct do
+      
+      shared_branch :kids do
+        person 'Jack', 11
+        person 'Jill', 10
+      end
+      
+      family "Dad's new family" do
+        members do
+          person 'Dad', 45
+          graft_branch :kids
+        end
+      end
+      
+      family "Mum's new family" do
+        members do
+          person 'Mum', 40
+          person 'Red-headed step-child', 8
+          graft_branch :kids
+        end
+      end
+    end
+    
+    assert 2, families.length
+    assert_kind_of Family, families[0]
+    assert_kind_of Family, families[1]
+    
+    assert 3, families[0].members.size
+    assert families[0].members.any? {|m| m.given_name == 'Jack'}
+    assert families[0].members.any? {|m| m.given_name == 'Jill'}
+    
+    assert 4, families[1].members.size
+    assert families[1].members.any? {|m| m.given_name == 'Jack'}
+    assert families[1].members.any? {|m| m.given_name == 'Jill'}
+  end
+  
+  def test_we_cant_share_branches_that_are_undefined
+    # TODO: why does this output funny stuff
+    assert_raise RuntimeError do
+      Lumberjack.construct do
+        family 'wont work' do
+            graft_branch :non_existant
+        end
+      end
+    end
+  end
 end

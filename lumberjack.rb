@@ -5,7 +5,8 @@ class Lumberjack
     builder.__process(block)    
   end
   
-  @@methods_to_keep = /^__/, /class/, /instance_eval/, /method_missing/
+  @@methods_to_keep = /^__/, /class/, /instance_eval/, /method_missing/,
+                      /instance_variable_(g|s)et/
   
   instance_methods.each do |m|
     undef_method m unless @@methods_to_keep.find { |r| r.match m }
@@ -32,6 +33,16 @@ class Lumberjack
     File.open filename, 'r' do |f|
       eval f.read, binding, __FILE__, __LINE__
     end
+  end
+  
+  def shared_branch(branch_name, &block)
+    instance_variable_set "@#{branch_name}", lambda(&block)
+  end
+  
+  def graft_branch(branch_name)
+    branch = instance_variable_get("@#{branch_name}")
+    raise "Attemption to graft branch #{branch_name} which is undefined" unless branch
+    instance_eval(&branch)
   end
   
   def method_missing(*args, &block)
