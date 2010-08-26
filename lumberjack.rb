@@ -44,6 +44,12 @@ class Lumberjack
     raise "Attemption to graft branch #{branch_name} which is undefined" unless branch
     instance_eval(&branch)
   end
+
+  def prune(method, value)
+    current_scope.delete_if do |twig|
+      twig.respond_to?(method) && twig.send(method) == value
+    end
+  end
   
   def method_missing(*args, &block)
     # if we only have one arg, and no block, then we're trying to build a

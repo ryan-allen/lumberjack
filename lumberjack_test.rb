@@ -277,6 +277,39 @@ class LumberjackTest < Test::Unit::TestCase
     assert families[1].members.any? {|m| m.given_name == 'Jack'}
     assert families[1].members.any? {|m| m.given_name == 'Jill'}
   end
+
+  def test_we_can_remove_twigs_with_prune
+    families = Lumberjack.construct do
+
+      shared_branch :kids do
+        person 'Jack', 12
+        person 'Jane', 10
+        person 'Bob', 10
+      end
+
+      shared_branch :update_kids do
+        prune :age, 10
+        person 'Will', 11
+      end
+
+      family "Dad's family" do
+        members do
+          person 'Dad', 45
+          person 'Mum', 49
+          prune :given_name, 'Mum'
+          person 'Mum', 26
+
+          graft_branch :kids
+          graft_branch :update_kids
+        end
+      end
+    end
+
+    assert families[0].members.any? {|m| m.given_name == 'Will' && m.age == 11}
+    assert families[0].members.any? {|m| m.given_name == 'Jack' && m.age == 12}
+    assert families[0].members.any? {|m| m.given_name == 'Mum' && m.age == 26}
+    assert families[0].members.any? {|m| m.given_name == 'Dad' && m.age == 45}
+  end
   
   def test_we_cant_share_branches_that_are_undefined
     # TODO: why does this output funny stuff
