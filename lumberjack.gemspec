@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 Gem::Specification.new do |s|
-  s.name        = "lumberjack"
+  s.name        = "lumberjack-dsl"
   s.version     = "0.0.1"
   s.authors     = ["Ryan Allen", "Steve Hodgkiss", "John Barton", "James Dowling"]
   s.email       = ["ryan@yeahnah.org", "steve@hodgkiss.me", "jrbarton@gmail.com", "jamesd741@gmail.com"]
@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.summary     = %q{Lumberjack is best summed up as a generic DSL for constructing object trees.}
   s.description = %q{}
 
-  s.rubyforge_project = "lumberjack"
+  s.rubyforge_project = "lumberjack-dsl"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
