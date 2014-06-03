@@ -48,7 +48,7 @@ describe Lumberjack do
   it 'construct returns an empty list' do
     Lumberjack.construct.should be_empty
   end
-  
+
   it 'testcan create a single class' do
     tree = Lumberjack.construct do
       family {} # api change w/ scoping requires a block to be passed, otherwise can't tell if you're
@@ -57,7 +57,7 @@ describe Lumberjack do
     tree.length.should eq 1
     tree.first.should be_instance_of Family
   end
-  
+
   it 'test can create a single class passing in args' do
     tree = Lumberjack.construct do
       family 'Allen', :heritage => :mixed
@@ -67,7 +67,7 @@ describe Lumberjack do
     tree.first.name.should eq 'Allen'
     tree.first.heritage.should eq :mixed
   end
-  
+
   it 'can create two classes passing in args' do
     tree = Lumberjack.construct do
       family 'Allen', :heritage => [:english, :irish]
@@ -81,7 +81,7 @@ describe Lumberjack do
     tree[1].name.should eq 'Ta\'eed'
     tree[1].heritage.should eq [:iranian, :english]
   end
-  
+
   it 'can set instance members with block' do
     tree = Lumberjack.construct do
       family do
@@ -94,7 +94,7 @@ describe Lumberjack do
     tree[0].name.should eq 'Allen'
     tree[0].heritage.should eq [:english, :irish]
   end
-  
+
   it 'can used mixed constructor and instance members in_blocke' do
     tree = Lumberjack.construct do
       family 'Allen' do
@@ -106,7 +106,7 @@ describe Lumberjack do
     tree[0].name.should eq 'Allen'
     tree[0].heritage.should eq [:english, :irish]
   end
-  
+
   it 'create list in scoped instance if block with no args' do
     tree = Lumberjack.construct do
       family 'Allen' do
@@ -132,7 +132,7 @@ describe Lumberjack do
     tree[0].members[2].given_name.should eq 'Ryan'
     tree[0].members[2].age.should eq 24
   end
-  
+
   it 'can take generate arrays with comma semantics and tell the difference' do
     tree = Lumberjack.construct do
       family 'Allen' do
@@ -141,7 +141,7 @@ describe Lumberjack do
     end
     tree[0].heritage.should eq [:english, :irish]
   end
-  
+
   it 'will_push element onto object if list accessor is already initialized' do
     vehicles = Lumberjack.construct do
       vehicle :name => 'unicycle' do
@@ -152,7 +152,7 @@ describe Lumberjack do
     end
     vehicles[0].wheels.should be_instance_of SetOfWheels
   end
-  
+
   it 'can set initial context to something else besdies an array' do
     showroom = Lumberjack.construct Showroom.new do
       vehicle :name => 'a FERRARRI!!!1'
@@ -162,13 +162,13 @@ describe Lumberjack do
     showroom.should be_instance_of Showroom
     showroom.length.should eq 3
   end
-  
+
   # biggest hack ever, use a ! to isntanciate a class to an accessor, must be
   # inferable by the accessor name, such a large hack, but we need it for
-  # production, and i'm sure other people will need it, so lets leave this 
+  # production, and i'm sure other people will need it, so lets leave this
   # gaping flaw of lumberjack for the time being till we can think of something
   # more nice and appropriate :/ :D
-  it 'can create instance of class via bang method' do 
+  it 'can create instance of class via bang method' do
     cars = Lumberjack.construct do
       vehicle :name => 'Prius (are owned by rich hippies)' do
         person! 'Ryan' do # i so put my foot in here, i'm not a rich hippy!
@@ -183,7 +183,7 @@ describe Lumberjack do
     cars[0].person.age.should eq 25
     cars[0].person.given_name.should eq 'Ryan'
   end
-  
+
   it 'can create list of primitives' do # not sure this is valid useage (of course it is you big dummy ryan from the past!)
     tree = Lumberjack.construct do
       array [:one, :two, :three]
@@ -203,7 +203,7 @@ describe Lumberjack do
     cars[1].should be_instance_of Vehicle::Heavy
     cars[2].should be_instance_of Vehicle::Heavy::ReallyHeavy
   end
-  
+
   it 'we can load in other files' do
     family = Lumberjack.construct do
       family 'Barton' do
@@ -213,7 +213,7 @@ describe Lumberjack do
         end
       end
     end
-    
+
     family.length.should eq 1
     family.first.should be_instance_of Family
     family.first.name.should eq 'Barton'
@@ -227,22 +227,22 @@ describe Lumberjack do
     family.first.members.last.given_name.should eq 'Ethan'
     family.first.members.last.age.should eq 10
   end
-  
+
   it 'we can share branches that are defined' do
     families = Lumberjack.construct do
-      
+
       shared_branch :kids do
         person 'Jack', 11
         person 'Jill', 10
       end
-      
+
       family "Dad's new family" do
         members do
           person 'Dad', 45
           graft_branch :kids
         end
       end
-      
+
       family "Mum's new family" do
         members do
           person 'Mum', 40
@@ -251,15 +251,15 @@ describe Lumberjack do
         end
       end
     end
-    
+
     families.length.should eq 2
     families[0].should be_instance_of Family
     families[1].should be_instance_of Family
-    
+
     families[0].members.size.should eq 3
     families[0].members.any? {|m| m.given_name == 'Jack'}.should be_true
     families[0].members.any? {|m| m.given_name == 'Jill'}.should be_true
-    
+
     families[1].members.size.should eq 4
     families[1].members.any? {|m| m.given_name == 'Jack'}.should be_true
     families[1].members.any? {|m| m.given_name == 'Jill'}.should be_true
@@ -297,7 +297,7 @@ describe Lumberjack do
     families[0].members.any? {|m| m.given_name == 'Mum' && m.age == 26}.should be_true
     families[0].members.any? {|m| m.given_name == 'Dad' && m.age == 45}.should be_true
   end
-  
+
   it 'doesnt share branches that are undefined' do
     # TODO: why does this output funny stuff
     expect {
