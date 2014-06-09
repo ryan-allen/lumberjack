@@ -9,7 +9,7 @@ whatever you're willing to dream up.
 # Installation
 
 ```
-gem install lumberjack
+gem install lumberjack-dsl
 ```
 
 # Usage
