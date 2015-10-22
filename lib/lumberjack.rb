@@ -33,7 +33,7 @@ class Lumberjack
 
   def load_tree_file(filename)
     File.open filename, 'r' do |f|
-      eval f.read, binding, __FILE__, __LINE__
+      eval f.read, binding, filename
     end
   end
 

@@ -227,6 +227,23 @@ describe Lumberjack do
     family.first.members.last.age.must_equal 10
   end
 
+  it 'provides accurate backtrace information when loading in files' do
+    begin
+      Lumberjack.construct do
+        family 'Barton' do
+          heritage [:dutch, :mongrel_aussie]
+          members do
+            load_tree_file 'examples/broken-people.rb'
+          end
+        end
+      end
+      raise "the dead"
+    rescue
+      $!.message.must_equal "the roof"
+      $!.backtrace.first.must_equal %{examples/broken-people.rb:4:in `block in load_tree_file'}
+    end
+  end
+
   it 'we can share branches that are defined' do
     families = Lumberjack.construct do
 
