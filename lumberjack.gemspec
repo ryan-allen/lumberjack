@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 Gem::Specification.new do |s|
   s.name        = "lumberjack-dsl"
-  s.version     = "0.0.2"
+  s.version     = "0.0.3"
   s.license     = "MIT"
   s.authors     = ["Ryan Allen", "Steve Hodgkiss", "John Barton", "James Dowling"]
   s.email       = ["ryan@yeahnah.org", "steve@hodgkiss.me", "jrbarton@gmail.com", "jamesd741@gmail.com"]
