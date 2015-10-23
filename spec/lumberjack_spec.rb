@@ -1,4 +1,3 @@
-$: << '.'
 require 'lumberjack'
 require 'minitest/autorun'
 
