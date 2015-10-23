@@ -8,8 +8,6 @@ Gem::Specification.new do |s|
   s.summary     = %q{Lumberjack is best summed up as a generic DSL for constructing object trees.}
   s.description = %q{}
 
-  s.rubyforge_project = "lumberjack-dsl"
-
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
