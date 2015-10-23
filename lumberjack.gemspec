@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.version     = "0.0.2"
   s.authors     = ["Ryan Allen", "Steve Hodgkiss", "John Barton", "James Dowling"]
   s.email       = ["ryan@yeahnah.org", "steve@hodgkiss.me", "jrbarton@gmail.com", "jamesd741@gmail.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/ryan-allen/lumberjack"
   s.summary     = %q{Lumberjack is best summed up as a generic DSL for constructing object trees.}
   s.description = %q{}
 
