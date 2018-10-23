@@ -38,7 +38,7 @@ class Lumberjack
   end
 
   def shared_branch(branch_name, &block)
-    instance_variable_set "@#{branch_name}", lambda(&block)
+    instance_variable_set "@#{branch_name}", block
   end
 
   def graft_branch(branch_name)
